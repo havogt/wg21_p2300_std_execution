@@ -91,6 +91,8 @@ int main() {
     ex::start_detached(std::move(snd));
   }
 
+  std::this_thread::sleep_for(std::chrono::milliseconds(
+      100)); // prevent destruction of thread pools before async work finishes
   io_pool.request_stop();
   work_pool.request_stop();
 
