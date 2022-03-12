@@ -280,6 +280,8 @@ namespace example {
     if (!lk) {
       return false;
     }
+    if (stopRequested_)
+      return false;
     const bool wasEmpty = queue_.empty();
     queue_.push_back(task);
     if (wasEmpty) {
@@ -290,6 +292,8 @@ namespace example {
 
   inline void static_thread_pool::thread_state::push(task_base* task) {
     std::lock_guard lk{mut_};
+    if (stopRequested_)
+      return;
     const bool wasEmpty = queue_.empty();
     queue_.push_back(task);
     if (wasEmpty) {
