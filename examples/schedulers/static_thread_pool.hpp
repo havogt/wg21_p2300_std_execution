@@ -239,6 +239,9 @@ namespace example {
 
   inline void static_thread_pool::enqueue(task_base* task) noexcept {
     const std::uint32_t threadCount = static_cast<std::uint32_t>(threads_.size());
+    if (threadCount == 0) // don't enqueue if thread pool is already partly
+                          // destructed, but could still be a race condition
+      return;
     const std::uint32_t startIndex =
         nextThread_.fetch_add(1, std::memory_order_relaxed) % threadCount;
 
